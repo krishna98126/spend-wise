@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SpendWise — Student Expense Tracker</title>
+<meta name="description" content="A passbook-style expense tracker for students. Log income and expenses, watch your balance update line by line, and see where your money goes." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="passbook">
+
+    <!-- Cover -->
+    <header class="cover">
+      <div class="cover__spine" aria-hidden="true"></div>
+      <div class="cover__content">
+        <p class="cover__eyebrow">Student Passbook</p>
+        <h1 class="cover__title">SpendWise</h1>
+        <p class="cover__tagline">Your spending, entered by hand.</p>
+      </div>
+      <div class="cover__month-field">
+        <label for="month-select">Statement month</label>
+        <input type="month" id="month-select" />
+      </div>
+    </header>
+
+    <!-- View switcher -->
+    <nav class="view-tabs" aria-label="View">
+      <button type="button" class="view-tab is-active" data-view="personal" role="tab" aria-selected="true">My Passbook</button>
+      <button type="button" class="view-tab" data-view="groups" role="tab" aria-selected="false">Shared Ledgers</button>
+    </nav>
+
+    <!-- Page: personal tracker -->
+    <main class="page" id="personal-view">
+
+      <!-- Balance summary strip -->
+      <section class="summary" aria-label="Account summary">
+        <div class="summary__item">
+          <span class="summary__label">Money in</span>
+          <span class="summary__value summary__value--credit" id="total-income">₹0</span>
+        </div>
+        <div class="summary__item">
+          <span class="summary__label">Money out</span>
+          <span class="summary__value summary__value--debit" id="total-expense">₹0</span>
+        </div>
+        <div class="summary__item summary__item--stamp">
+          <span class="summary__label">Balance</span>
+          <span class="summary__value" id="running-balance">₹0</span>
+        </div>
+      </section>
+
+      <!-- Budget bar -->
+      <section class="budget" aria-label="Monthly budget">
+        <div class="budget__row">
+          <label for="budget-input">Monthly budget for this statement</label>
+          <div class="budget__input-wrap">
+            <span aria-hidden="true">₹</span>
+            <input type="number" id="budget-input" min="0" step="50" placeholder="10000" />
+          </div>
+        </div>
+        <div class="budget__bar" role="img" id="budget-bar-wrap" aria-label="Budget usage">
+          <div class="budget__bar-fill" id="budget-bar-fill"></div>
+        </div>
+        <p class="budget__note" id="budget-note">Set a budget to track how much of it you've used.</p>
+      </section>
+
+      <!-- New entry form -->
+      <section class="entry" aria-label="Add a new entry">
+        <h2 class="section-title">New entry</h2>
+        <form id="entry-form" class="entry__form">
+
+          <div class="entry__toggle" role="radiogroup" aria-label="Entry type">
+            <button type="button" class="entry__toggle-btn is-active" data-type="expense" role="radio" aria-checked="true">Withdrawal (expense)</button>
+            <button type="button" class="entry__toggle-btn" data-type="income" role="radio" aria-checked="false">Deposit (income)</button>
+          </div>
+
+          <div class="entry__grid">
+            <div class="field">
+              <label for="amount-input">Amount (₹)</label>
+              <input type="number" id="amount-input" min="0" step="1" placeholder="0" required />
+            </div>
+
+            <div class="field" id="category-field">
+              <label for="category-input">Category</label>
+              <select id="category-input">
+                <option>Food</option>
+                <option>Travel</option>
+                <option>Shopping</option>
+                <option>Education</option>
+                <option>Entertainment</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="date-input">Date</label>
+              <input type="date" id="date-input" required />
+            </div>
+
+            <div class="field field--wide">
+              <label for="note-input">Particulars</label>
+              <input type="text" id="note-input" placeholder="e.g. Canteen lunch with roommates" maxlength="60" />
+            </div>
+          </div>
+
+          <button type="submit" class="entry__submit">Add entry</button>
+        </form>
+      </section>
+
+      <!-- Ledger -->
+      <section class="ledger" aria-label="Transaction ledger">
+        <div class="ledger__head">
+          <h2 class="section-title">Ledger</h2>
+          <label class="ledger__filter">
+            <span>Category</span>
+            <select id="filter-category">
+              <option value="all">All entries</option>
+              <option>Food</option>
+              <option>Travel</option>
+              <option>Shopping</option>
+              <option>Education</option>
+              <option>Entertainment</option>
+              <option>Other</option>
+              <option value="Income">Income</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="ledger__table-wrap">
+          <table class="ledger__table">
+            <thead>
+              <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Particulars</th>
+                <th scope="col">Category</th>
+                <th scope="col" class="num">Debit</th>
+                <th scope="col" class="num">Credit</th>
+                <th scope="col" class="num">Balance</th>
+                <th scope="col" class="sr-only">Delete</th>
+              </tr>
+            </thead>
+            <tbody id="ledger-body">
+              <!-- rows injected here -->
+            </tbody>
+          </table>
+        </div>
+
+        <p class="ledger__empty" id="ledger-empty" hidden>No entries yet this month. Make your first entry above — it'll show up here, ruled line and all.</p>
+      </section>
+
+      <!-- Category breakdown -->
+      <section class="breakdown" aria-label="Spending by category">
+        <h2 class="section-title">Where it went</h2>
+        <div class="breakdown__grid">
+          <div class="breakdown__chart-wrap">
+            <canvas id="category-chart" width="260" height="260"></canvas>
+            <p class="breakdown__chart-empty" id="chart-empty" hidden>No expenses logged this month yet.</p>
+          </div>
+          <ul class="breakdown__list" id="category-list">
+            <!-- stamp badges injected here -->
+          </ul>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Page: shared ledgers (Splitwise-style group splitting) -->
+    <main class="page" id="groups-view" hidden>
+
+      <!-- Group picker -->
+      <section class="group-picker" aria-label="Choose a shared ledger">
+        <div class="group-picker__row">
+          <label for="group-select">Shared ledger</label>
+          <select id="group-select">
+            <option value="">Select a group…</option>
+          </select>
+          <button type="button" id="new-group-btn" class="ghost-btn">+ New group</button>
+        </div>
+      </section>
+
+      <!-- New group form -->
+      <section class="new-group" id="new-group-form" hidden aria-label="Create a shared ledger">
+        <h2 class="section-title">New shared ledger</h2>
+        <div class="entry__grid">
+          <div class="field field--wide">
+            <label for="new-group-name">Group name</label>
+            <input type="text" id="new-group-name" placeholder="e.g. Flat 3B, Goa Trip" />
+          </div>
+          <div class="field field--wide">
+            <label for="new-group-members">Members, comma-separated</label>
+            <input type="text" id="new-group-members" placeholder="e.g. You, Rahul, Priya, Aman" />
+          </div>
+        </div>
+        <button type="button" id="create-group-btn" class="entry__submit">Create group</button>
+      </section>
+
+      <!-- Group detail -->
+      <div id="group-detail" hidden>
+
+        <section class="group-members" aria-label="Group members">
+          <ul class="member-chips" id="member-chips"></ul>
+          <label class="perspective">
+            <span>You are</span>
+            <select id="perspective-select"></select>
+          </label>
+        </section>
+
+        <section class="entry" aria-label="Add a shared expense">
+          <h2 class="section-title">New shared expense</h2>
+          <form id="group-expense-form" class="entry__form">
+
+            <div class="entry__grid">
+              <div class="field">
+                <label for="ge-amount">Amount (₹)</label>
+                <input type="number" id="ge-amount" min="0" step="1" placeholder="0" required />
+              </div>
+
+              <div class="field">
+                <label for="ge-paid-by">Paid by</label>
+                <select id="ge-paid-by"></select>
+              </div>
+
+              <div class="field">
+                <label for="ge-date">Date</label>
+                <input type="date" id="ge-date" required />
+              </div>
+
+              <div class="field field--wide">
+                <label for="ge-description">Description</label>
+                <input type="text" id="ge-description" placeholder="e.g. Groceries, Zomato order" maxlength="60" />
+              </div>
+            </div>
+
+            <div class="split-type" role="radiogroup" aria-label="Split type">
+              <button type="button" class="entry__toggle-btn is-active" data-split="equal" role="radio" aria-checked="true">Split equally</button>
+              <button type="button" class="entry__toggle-btn" data-split="exact" role="radio" aria-checked="false">Exact amounts</button>
+              <button type="button" class="entry__toggle-btn" data-split="percentage" role="radio" aria-checked="false">Percentage</button>
+            </div>
+
+            <div class="split-members" id="split-members"></div>
+            <p class="split-hint" id="split-hint"></p>
+
+            <button type="submit" class="entry__submit">Add expense</button>
+          </form>
+        </section>
+
+        <section class="ledger" aria-label="Shared expense history">
+          <h2 class="section-title">Shared ledger</h2>
+          <div class="ledger__table-wrap">
+            <table class="ledger__table">
+              <thead>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Paid by</th>
+                  <th scope="col" class="num">Amount</th>
+                  <th scope="col" class="num">Your share</th>
+                  <th scope="col" class="sr-only">Delete</th>
+                </tr>
+              </thead>
+              <tbody id="group-ledger-body"></tbody>
+            </table>
+          </div>
+          <p class="ledger__empty" id="group-ledger-empty" hidden>No shared expenses yet. Add one above.</p>
+        </section>
+
+        <section class="balances" aria-label="Group balances">
+          <h2 class="section-title">Balances</h2>
+          <ul class="balance-list" id="balance-list"></ul>
+
+          <h2 class="section-title" style="margin-top:20px">Settle up</h2>
+          <ul class="settle-list" id="settle-list"></ul>
+          <p class="settle-empty" id="settle-empty" hidden>Everyone's settled up.</p>
+        </section>
+
+      </div>
+
+      <p class="ledger__empty" id="no-groups-empty" hidden>No shared ledgers yet. Create one above to start splitting expenses with roommates or a trip group.</p>
+
+    </main>
+
+    <footer class="pf-footer">
+      <p>SpendWise · Phase 1 · data stored only in this browser</p>
+    </footer>
+
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
