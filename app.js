@@ -11,12 +11,12 @@ const STORAGE_KEYS = {
 const CATEGORIES = ['Food', 'Travel', 'Shopping', 'Education', 'Entertainment', 'Other'];
 
 const CATEGORY_COLORS = {
-  Food: '#1f6f5c',
-  Travel: '#2f5a8a',
-  Shopping: '#a9760f',
-  Education: '#5b4b8a',
-  Entertainment: '#9c3b2e',
-  Other: '#6b7280',
+  Food: '#6d4aff',
+  Travel: '#3182f6',
+  Shopping: '#e44d78',
+  Education: '#16a889',
+  Entertainment: '#ef8b3d',
+  Other: '#7f89a4',
 };
 
 /* ---------- storage helpers ---------- */
@@ -438,7 +438,7 @@ let groupExpenses = loadGroupExpenses();
 let activeGroupId = null;
 let activeSplitType = 'equal';
 
-const MEMBER_COLORS = ['#1f6f5c', '#2f5a8a', '#a9760f', '#5b4b8a', '#9c3b2e', '#6b7280', '#0e7490', '#7c3aed'];
+const MEMBER_COLORS = ['#6d4aff', '#3182f6', '#16a889', '#e44d78', '#ef8b3d', '#7f89a4', '#8b65ff', '#19a98b'];
 
 function colorForMember(name) {
   let hash = 0;
