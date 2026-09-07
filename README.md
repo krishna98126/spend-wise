@@ -1,37 +1,77 @@
 # SpendWise
 
-A student expense tracker designed like a bank passbook — every entry gets a ruled line, a debit or credit column, and a running balance, just like the passbook your parents probably still keep in a drawer.
+A modern student expense tracker with personal budgeting, shared expense splitting, and an AI Money Coach.
 
-![status](https://img.shields.io/badge/phase-1%20%2F%206-blue) ![stack](https://img.shields.io/badge/stack-HTML%20%2F%20CSS%20%2F%20JS-informational)
+## Features
 
-## Why a passbook?
-
-Most expense trackers are generic dashboards — cards, gradients, a big number up top. A passbook is a format Indian students already know how to read: date, particulars, debit, credit, balance. Reusing that mental model makes the numbers easier to trust at a glance, and it gives the project a point of view instead of looking like every other tutorial finance app.
-
-## Features (Phase 1)
-
-**My Passbook — personal tracker**
-- Log **income** (deposits) and **expenses** (withdrawals) with amount, category, note, and date
-- Categorize expenses: Food, Travel, Shopping, Education, Entertainment, Other
-- Running balance calculated line-by-line, exactly like a real passbook — the balance on any row never changes even if you filter the view
-- Set a **monthly budget** and see a usage bar (with a warning state past 80%, and an over-budget state)
-- Filter the ledger by category
-- Category breakdown as a donut chart (Chart.js) plus a ranked list with mini bars
-
-**Shared Ledgers — Splitwise-style group splitting**
-- Create groups (roommates, a trip, anything) with any number of members
-- Add a shared expense, choose who paid, and split it **equally**, by **exact amounts**, or by **percentage**
-- Pick "You are: ⁠___" to see your own share of every expense at a glance
-- Automatic **balance calculation** per member — who's owed money, who owes it
-- **Debt simplification** — instead of listing every pairwise IOU, it works out the minimum number of payments needed to settle the whole group (same idea Splitwise uses under the hood)
-
-Both live in the same app — a tab switcher under the cover flips between "My Passbook" and "Shared Ledgers." Everything persists in `localStorage`, in two separate keysets, so they never interfere with each other.
+- Personal income and expense tracking
+- Monthly budgets with usage warnings
+- Running balance
+- Category breakdown and Chart.js donut chart
+- Shared ledgers for roommates and trips
+- Equal, exact, and percentage expense splitting
+- Automatic balances and debt simplification
+- AI Money Coach with server-side API key protection
+- Responsive modern fintech/SaaS interface
+- Light and dark themes
+- Data persistence through browser localStorage
 
 ## Tech stack
 
-- HTML, CSS, vanilla JavaScript (no build step, no framework)
-- [Chart.js](https://www.chartjs.org/) via CDN for the category donut chart
-- Fonts: Spectral (display), Inter (body), IBM Plex Mono (all figures — for column alignment)
+- HTML
+- CSS
+- Vanilla JavaScript
+- Chart.js via CDN
+- Node.js + Express
+- OpenAI API for the AI Money Coach
+
+## Run locally
+
+```bash
+npm install
+cp .env.example .env
+```
+
+Add your OpenAI API key to `.env`:
+
+```env
+OPENAI_API_KEY=your_key_here
+OPENAI_MODEL=gpt-5.6-luna
+PORT=3000
+```
+
+Then:
+
+```bash
+npm start
+```
+
+Open:
+
+```text
+http://localhost:3000
+```
+
+## Project structure
+
+```text
+spendwise/
+├── index.html
+├── style.css
+├── app.js
+├── server.js
+├── package.json
+├── package-lock.json
+├── .env.example
+├── .gitignore
+└── README.md
+```
+
+## Important
+
+Never commit `.env` or `node_modules/` to GitHub.
+
+The AI Money Coach is educational guidance and does not provide regulated financial advice or guarantee investment returns.
 
 ## Running it locally
 
