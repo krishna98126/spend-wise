@@ -1063,10 +1063,4 @@ html[data-theme="dark"] .ai-chat__messages { background:#0c1420; border-color:#2
 html[data-theme="dark"] .ai-message--assistant { background:#172333; border-color:#304058; }
 html[data-theme="dark"] .ai-suggestions button { border-color:#34445b; color:#aab5c5; }
 html[data-theme="dark"] .ai-chat__form textarea { background:#0d1521; color:#e9edf4; border-color:#34445b; }
-@media (max-width:640px) {
-  .ai-chat { padding:15px; }
-  .ai-chat__head { flex-direction:column; }
-  .ai-chat__form { grid-template-columns:1fr; }
-  .ai-chat__form .entry__submit { width:100%; }
-  .ai-message { max-width:94%; }
-}
+
