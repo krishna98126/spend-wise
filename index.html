@@ -22,9 +22,15 @@
         <h1 class="cover__title">SpendWise</h1>
         <p class="cover__tagline">Your spending, entered by hand.</p>
       </div>
-      <div class="cover__month-field">
-        <label for="month-select">Statement month</label>
-        <input type="month" id="month-select" />
+      <div class="cover__actions">
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch to dark mode">
+          <span class="theme-toggle__icon" aria-hidden="true">☾</span>
+          <span id="theme-toggle-label">Dark mode</span>
+        </button>
+        <div class="cover__month-field">
+          <label for="month-select">Statement month</label>
+          <input type="month" id="month-select" />
+        </div>
       </div>
     </header>
 
@@ -32,6 +38,7 @@
     <nav class="view-tabs" aria-label="View">
       <button type="button" class="view-tab is-active" data-view="personal" role="tab" aria-selected="true">My Passbook</button>
       <button type="button" class="view-tab" data-view="groups" role="tab" aria-selected="false">Shared Ledgers</button>
+      <button type="button" class="view-tab" data-view="coach" role="tab" aria-selected="false">AI Money Coach</button>
     </nav>
 
     <!-- Page: personal tracker -->
@@ -281,6 +288,74 @@
 
       <p class="ledger__empty" id="no-groups-empty" hidden>No shared ledgers yet. Create one above to start splitting expenses with roommates or a trip group.</p>
 
+    </main>
+
+    <!-- Page: AI money coach -->
+    <main class="page coach-page" id="coach-view" hidden>
+      <section class="coach-hero">
+        <div>
+          <p class="coach-kicker">SpendWise Intelligence</p>
+          <h2 class="coach-title">Your AI Money Coach</h2>
+          <p class="coach-subtitle">Get practical suggestions from your own spending history — where you can cut costs, build savings, and learn about investing.</p>
+        </div>
+        <div class="coach-score" id="coach-score">—</div>
+      </section>
+
+      <section class="coach-grid" aria-label="Money coaching insights">
+        <article class="coach-card coach-card--primary">
+          <div class="coach-card__head"><span class="coach-icon">✦</span><h3>What I notice</h3></div>
+          <div id="coach-insights" class="coach-list"></div>
+        </article>
+
+        <article class="coach-card">
+          <div class="coach-card__head"><span class="coach-icon">₹</span><h3>Save more</h3></div>
+          <div id="coach-savings" class="coach-list"></div>
+        </article>
+
+        <article class="coach-card">
+          <div class="coach-card__head"><span class="coach-icon">↗</span><h3>Build & invest</h3></div>
+          <div id="coach-investing" class="coach-list"></div>
+        </article>
+      </section>
+
+      <section class="coach-plan">
+        <div class="coach-plan__head">
+          <div>
+            <p class="coach-kicker">This month</p>
+            <h2 class="section-title">A simple money plan</h2>
+          </div>
+          <button type="button" class="ghost-btn" id="refresh-coach">Refresh advice</button>
+        </div>
+        <div class="coach-plan__steps" id="coach-plan-steps"></div>
+      </section>
+
+
+      <section class="ai-chat" aria-label="AI financial assistant">
+        <div class="ai-chat__head">
+          <div>
+            <p class="coach-kicker">Conversational AI</p>
+            <h2 class="section-title">Ask your Money Coach</h2>
+            <p class="ai-chat__sub">Ask questions about your spending, saving, budgeting or learning about investments. Your current SpendWise data is included automatically.</p>
+          </div>
+          <span class="ai-chat__status" id="ai-status">Ready</span>
+        </div>
+        <div class="ai-suggestions" id="ai-suggestions">
+          <button type="button" data-prompt="Where am I spending too much this month?">Where am I overspending?</button>
+          <button type="button" data-prompt="How much could I realistically save next month?">How much can I save?</button>
+          <button type="button" data-prompt="How should I divide my monthly surplus between savings and long-term investing?">Savings vs investing?</button>
+          <button type="button" data-prompt="Make me a simple 30-day money plan based on my SpendWise data.">Make my 30-day plan</button>
+        </div>
+        <div class="ai-chat__messages" id="ai-chat-messages" aria-live="polite">
+          <div class="ai-message ai-message--assistant"><strong>SpendWise AI</strong><p>Hi! I can look at your current month and help you make a practical money plan. What would you like to know?</p></div>
+        </div>
+        <form class="ai-chat__form" id="ai-chat-form">
+          <textarea id="ai-chat-input" rows="2" maxlength="1200" placeholder="e.g. I earn ₹20,000. How should I manage it?" required></textarea>
+          <button type="submit" class="entry__submit" id="ai-send-btn">Ask AI</button>
+        </form>
+        <p class="ai-chat__note">Your API key stays on the server. AI responses are educational and are not guaranteed investment or financial advice.</p>
+      </section>
+
+      <p class="coach-disclaimer">Educational guidance only. SpendWise does not provide regulated financial advice or guarantee investment returns. Before investing, consider your goals, time horizon, risk tolerance, fees and applicable taxes.</p>
     </main>
 
     <footer class="pf-footer">

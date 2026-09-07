@@ -91,3 +91,21 @@ This is deliberately close to what SQL tables will look like once there's a real
 ## License
 
 MIT — do whatever you like with it.
+
+
+## Real AI Money Coach (Phase 2)
+
+The AI chat uses a small Express backend so the OpenAI API key is never exposed in browser JavaScript. The browser sends the user's current-month SpendWise snapshot and recent chat history to `/api/ai-coach`; the server calls the OpenAI Responses API and returns the assistant's answer.
+
+### Run it
+
+```bash
+npm install
+cp .env.example .env
+# Put your OpenAI API key in .env
+npm start
+```
+
+Then open `http://localhost:3000`. Do not put the API key directly in `app.js` or `index.html`, and do not commit `.env` to Git.
+
+The current implementation uses `gpt-5.6-luna` by default; change `OPENAI_MODEL` in `.env` if needed.

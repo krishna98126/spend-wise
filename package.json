@@ -1,0 +1,9 @@
+{
+  "name": "spendwise-ai",
+  "version": "2.0.0",
+  "private": true,
+  "description": "SpendWise student expense tracker with a server-side AI Money Coach",
+  "main": "server.js",
+  "scripts": { "start": "node server.js" },
+  "dependencies": { "dotenv": "^16.4.7", "express": "^5.1.0", "openai": "^5.12.0" }
+}

@@ -862,3 +862,227 @@ function renderBalances(group, expenses, youAre) {
   renderGroupsView();
 })();
 
+
+/* ===========================================================
+   Theme + AI Money Coach
+   The coach is intentionally client-side: it analyzes the user's
+   own ledger and gives educational, non-regulated guidance.
+   =========================================================== */
+
+const THEME_KEY = 'spendwise:theme';
+const themeToggle = document.getElementById('theme-toggle');
+const themeToggleLabel = document.getElementById('theme-toggle-label');
+const themeToggleIcon = document.querySelector('.theme-toggle__icon');
+const coachView = document.getElementById('coach-view');
+const coachScore = document.getElementById('coach-score');
+const coachInsights = document.getElementById('coach-insights');
+const coachSavings = document.getElementById('coach-savings');
+const coachInvesting = document.getElementById('coach-investing');
+const coachPlanSteps = document.getElementById('coach-plan-steps');
+const refreshCoachBtn = document.getElementById('refresh-coach');
+
+function applyTheme(theme) {
+  const dark = theme === 'dark';
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  if (themeToggle) {
+    themeToggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+    if (themeToggleLabel) themeToggleLabel.textContent = dark ? 'Light mode' : 'Dark mode';
+    if (themeToggleIcon) themeToggleIcon.textContent = dark ? '☀' : '☾';
+  }
+}
+
+(function initTheme() {
+  const saved = localStorage.getItem(THEME_KEY);
+  applyTheme(saved === 'dark' ? 'dark' : 'light');
+})();
+
+themeToggle?.addEventListener('click', () => {
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  localStorage.setItem(THEME_KEY, next);
+  applyTheme(next);
+  if (categoryChart) render();
+});
+
+// Extend the existing tab switcher so the AI coach behaves like the other views.
+viewTabs.forEach((tab) => {
+  tab.addEventListener('click', () => {
+    const view = tab.dataset.view;
+    coachView.hidden = view !== 'coach';
+    if (view === 'coach') renderCoach();
+  });
+});
+
+refreshCoachBtn?.addEventListener('click', renderCoach);
+
+function coachMoneyData() {
+  const monthKey = monthSelect.value;
+  const monthTx = transactions.filter(t => monthKeyOf(t.date) === monthKey);
+  const income = monthTx.filter(t => t.type === 'income').reduce((s,t) => s + t.amount, 0);
+  const expense = monthTx.filter(t => t.type === 'expense').reduce((s,t) => s + t.amount, 0);
+  const budget = budgets[monthKey] || 0;
+  const categoryTotals = {};
+  CATEGORIES.forEach(c => categoryTotals[c] = 0);
+  monthTx.filter(t => t.type === 'expense').forEach(t => categoryTotals[t.category] = (categoryTotals[t.category] || 0) + t.amount);
+  const sortedCats = Object.entries(categoryTotals).filter(([,v]) => v > 0).sort((a,b) => b[1]-a[1]);
+  return { monthTx, income, expense, budget, categoryTotals, sortedCats };
+}
+
+function coachItem(text, tone='') {
+  const div = document.createElement('div');
+  div.className = 'coach-item' + (tone ? ` coach-item--${tone}` : '');
+  div.innerHTML = text;
+  return div;
+}
+
+function renderCoach() {
+  if (!coachView) return;
+  const d = coachMoneyData();
+  const rate = d.income > 0 ? d.expense / d.income : null;
+  let score = 72;
+  if (rate !== null) score += rate <= .5 ? 14 : rate <= .75 ? 5 : rate <= 1 ? -8 : -18;
+  if (d.budget && d.expense > d.budget) score -= 12;
+  if (d.budget && d.expense <= d.budget * .8) score += 5;
+  score = Math.max(0, Math.min(100, Math.round(score)));
+  coachScore.textContent = score;
+
+  coachInsights.innerHTML = '';
+  coachSavings.innerHTML = '';
+  coachInvesting.innerHTML = '';
+  coachPlanSteps.innerHTML = '';
+
+  if (!d.monthTx.length) {
+    coachInsights.appendChild(coachItem('<strong>No spending data yet.</strong> Add a few transactions and I’ll turn them into useful patterns.'));
+    coachSavings.appendChild(coachItem('Start by setting your monthly budget. A clear limit makes saving measurable.', 'good'));
+    coachInvesting.appendChild(coachItem('<strong>Learn before investing.</strong> Build an emergency buffer first, then explore diversified, low-cost investment products appropriate for your goals.', 'warn'));
+    renderCoachPlan(['Log your income and expenses', 'Set a realistic monthly budget', 'Create a small emergency buffer']);
+    return;
+  }
+
+  if (rate !== null) {
+    coachInsights.appendChild(coachItem(`<strong>${Math.round(rate * 100)}% of recorded income</strong> is going to expenses this month. ${rate <= .7 ? 'That leaves useful room for saving.' : 'Look for one or two categories to trim.'}`, rate <= .7 ? 'good' : 'warn'));
+  } else {
+    coachInsights.appendChild(coachItem('<strong>No income recorded this month.</strong> Add deposits/income to make the savings analysis more meaningful.', 'warn'));
+  }
+
+  if (d.sortedCats.length) {
+    const [topCat, topValue] = d.sortedCats[0];
+    const pct = d.expense ? Math.round(topValue / d.expense * 100) : 0;
+    coachInsights.appendChild(coachItem(`<strong>${topCat}</strong> is your largest spending category at ${formatRupees(topValue)} (${pct}%).`, pct >= 40 ? 'warn' : ''));
+    const second = d.sortedCats[1];
+    if (second) coachInsights.appendChild(coachItem(`${second[0]} is next at <strong>${formatRupees(second[1])}</strong>. Small reductions here could add up.`));
+  }
+
+  if (d.budget) {
+    const remaining = d.budget - d.expense;
+    coachSavings.appendChild(coachItem(remaining >= 0
+      ? `<strong>${formatRupees(Math.max(0, remaining))}</strong> remains in your budget. Try to protect part of it as savings instead of treating it as spendable.`
+      : `You're <strong>${formatRupees(Math.abs(remaining))}</strong> over budget. Pause non-essential purchases until the gap closes.`, remaining >= 0 ? 'good' : 'bad'));
+  } else {
+    coachSavings.appendChild(coachItem('<strong>Set a monthly budget</strong> first. A good starting point is to leave a deliberate gap between expected income and planned spending.', 'good'));
+  }
+
+  if (d.sortedCats[0] && d.sortedCats[0][1] > 0) {
+    coachSavings.appendChild(coachItem(`Try a <strong>10% reduction</strong> in ${d.sortedCats[0][0]} next month. That would free roughly ${formatRupees(d.sortedCats[0][1] * .1)} based on this month's pattern.`));
+  }
+  coachSavings.appendChild(coachItem('<strong>Automate saving first:</strong> move a fixed amount to savings soon after income arrives, rather than saving whatever happens to be left.', 'good'));
+
+  const investBase = d.income ? Math.max(0, d.income - d.expense) : 0;
+  coachInvesting.appendChild(coachItem(investBase > 0
+    ? `You currently have about <strong>${formatRupees(investBase)}</strong> of recorded monthly surplus. Consider directing a portion toward an emergency fund before taking more investment risk.`
+    : '<strong>Build a cash buffer first.</strong> If your monthly spending is already close to income, investing should not come before improving your cash flow.', 'warn'));
+  coachInvesting.appendChild(coachItem('<strong>After your emergency fund:</strong> learn about diversified options such as broad-market index funds, recurring deposits, or other products that match your time horizon and risk level.'));
+  coachInvesting.appendChild(coachItem('<strong>Do not chase quick returns.</strong> Compare fees, liquidity, risk, taxes and lock-in periods before choosing an investment.', 'good'));
+
+  renderCoachPlan([
+    d.budget && d.expense > d.budget ? 'Bring spending back under budget' : 'Protect this month’s remaining budget',
+    `Move a fixed amount toward savings${d.income ? ` (surplus: ${formatRupees(investBase)})` : ''}`,
+    'Build your emergency buffer, then invest for longer-term goals'
+  ]);
+}
+
+function renderCoachPlan(steps) {
+  steps.forEach((step, i) => {
+    const card = document.createElement('div');
+    card.className = 'coach-step';
+    card.innerHTML = `<span class="coach-step__num">0${i + 1}</span><h4>${escapeHtml(step.split(' — ')[0])}</h4><p>${escapeHtml(step)}</p>`;
+    coachPlanSteps.appendChild(card);
+  });
+}
+
+/* ---------- conversational AI assistant ---------- */
+const aiChatForm = document.getElementById('ai-chat-form');
+const aiChatInput = document.getElementById('ai-chat-input');
+const aiChatMessages = document.getElementById('ai-chat-messages');
+const aiSendBtn = document.getElementById('ai-send-btn');
+const aiStatus = document.getElementById('ai-status');
+const aiSuggestions = document.getElementById('ai-suggestions');
+let aiConversation = [];
+
+function appendAiMessage(role, text) {
+  const item = document.createElement('div');
+  item.className = `ai-message ai-message--${role}`;
+  const label = role === 'assistant' ? 'SpendWise AI' : 'You';
+  item.innerHTML = `<strong>${label}</strong><p>${escapeHtml(text).replace(/\n/g, '<br>')}</p>`;
+  aiChatMessages.appendChild(item);
+  aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+}
+
+function currentMoneySnapshot() {
+  const d = coachMoneyData();
+  return {
+    month: monthSelect?.value || '',
+    income: d.income,
+    expenses: d.expense,
+    budget: d.budget,
+    balance: d.income - d.expense,
+    categories: d.sortedCats.map(([category, amount]) => ({ category, amount })),
+    transactions: d.monthTx.map(t => ({ type:t.type, amount:t.amount, category:t.category, note:t.note, date:t.date }))
+  };
+}
+
+async function askAi(prompt) {
+  if (!prompt.trim()) return;
+  appendAiMessage('user', prompt.trim());
+  aiConversation.push({ role: 'user', content: prompt.trim() });
+  aiChatInput.value = '';
+  aiSendBtn.disabled = true;
+  aiStatus.textContent = 'Thinking…';
+  const old = aiSendBtn.textContent;
+  aiSendBtn.textContent = 'Thinking…';
+
+  try {
+    const response = await fetch('/api/ai-coach', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: prompt.trim(),
+        history: aiConversation.slice(-10),
+        money: currentMoneySnapshot()
+      })
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) throw new Error(data.error || 'The AI assistant could not respond.');
+    const answer = data.answer || 'I could not generate an answer right now.';
+    aiConversation.push({ role: 'assistant', content: answer });
+    appendAiMessage('assistant', answer);
+    aiStatus.textContent = 'Ready';
+  } catch (err) {
+    aiStatus.textContent = 'Offline';
+    appendAiMessage('assistant', `${err.message} Start the SpendWise server and make sure OPENAI_API_KEY is configured.`);
+  } finally {
+    aiSendBtn.disabled = false;
+    aiSendBtn.textContent = old;
+    aiChatInput.focus();
+  }
+}
+
+aiChatForm?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  askAi(aiChatInput.value);
+});
+
+aiSuggestions?.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-prompt]');
+  if (!button) return;
+  askAi(button.dataset.prompt);
+});
