@@ -45,20 +45,54 @@
     <main class="page" id="personal-view">
 
       <!-- Balance summary strip -->
-      <section class="summary" aria-label="Account summary">
-        <div class="summary__item">
-          <span class="summary__label">Money in</span>
-          <span class="summary__value summary__value--credit" id="total-income">₹0</span>
-        </div>
-        <div class="summary__item">
-          <span class="summary__label">Money out</span>
-          <span class="summary__value summary__value--debit" id="total-expense">₹0</span>
-        </div>
-        <div class="summary__item summary__item--stamp">
-          <span class="summary__label">Balance</span>
-          <span class="summary__value" id="running-balance">₹0</span>
-        </div>
-      </section>
+      <!-- Dashboard summary -->
+<section class="dashboard-summary" aria-label="Account summary">
+
+  <div class="dashboard-card dashboard-card--balance">
+    <div class="dashboard-card__top">
+      <span class="dashboard-card__label">Current Balance</span>
+      <span class="dashboard-card__icon">₹</span>
+    </div>
+
+    <div class="dashboard-card__value" id="running-balance">₹0</div>
+
+    <div class="dashboard-card__footer">
+      <span>Available this month</span>
+      <span class="dashboard-card__status">Active</span>
+    </div>
+  </div>
+
+  <div class="dashboard-card">
+    <div class="dashboard-card__top">
+      <span class="dashboard-card__label">Money In</span>
+      <span class="dashboard-card__icon">↗</span>
+    </div>
+
+    <div class="dashboard-card__value dashboard-card__value--income" id="total-income">
+      ₹0
+    </div>
+
+    <div class="dashboard-card__footer">
+      <span>Total income</span>
+    </div>
+  </div>
+
+  <div class="dashboard-card">
+    <div class="dashboard-card__top">
+      <span class="dashboard-card__label">Money Out</span>
+      <span class="dashboard-card__icon">↘</span>
+    </div>
+
+    <div class="dashboard-card__value dashboard-card__value--expense" id="total-expense">
+      ₹0
+    </div>
+
+    <div class="dashboard-card__footer">
+      <span>Total expenses</span>
+    </div>
+  </div>
+
+</section>
 
       <!-- Budget bar -->
       <section class="budget" aria-label="Monthly budget">
