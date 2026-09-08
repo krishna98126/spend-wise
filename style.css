@@ -2018,3 +2018,338 @@ html[data-theme="dark"] .pf-footer {
   }
 
 }
+/* =========================================================
+   SPENDWISE PHASE 1
+   STEP 2 — DARK MODE
+   ========================================================= */
+
+:root {
+  --sw-bg: #f6f3ed;
+  --sw-surface: #ffffff;
+  --sw-surface-soft: #faf8f4;
+  --sw-text: #172033;
+  --sw-text-soft: #667085;
+  --sw-border: rgba(23, 32, 51, 0.1);
+  --sw-shadow: rgba(15, 23, 42, 0.08);
+  --sw-accent: #172033;
+  --sw-input: #ffffff;
+}
+
+html[data-theme="dark"] {
+  --sw-bg: #0d1117;
+  --sw-surface: #151b23;
+  --sw-surface-soft: #10161e;
+  --sw-text: #f1f5f9;
+  --sw-text-soft: #9aa6b5;
+  --sw-border: rgba(255, 255, 255, 0.1);
+  --sw-shadow: rgba(0, 0, 0, 0.35);
+  --sw-accent: #f1f5f9;
+  --sw-input: #111821;
+}
+
+/* Main page */
+
+html[data-theme="dark"],
+html[data-theme="dark"] body {
+  background: var(--sw-bg);
+  color: var(--sw-text);
+}
+
+/* Generic surfaces */
+
+html[data-theme="dark"] .page,
+html[data-theme="dark"] .summary,
+html[data-theme="dark"] .budget,
+html[data-theme="dark"] .entry,
+html[data-theme="dark"] .ledger,
+html[data-theme="dark"] .breakdown,
+html[data-theme="dark"] .group-picker,
+html[data-theme="dark"] .new-group,
+html[data-theme="dark"] .group-members,
+html[data-theme="dark"] .balances {
+  color: var(--sw-text);
+}
+
+/* Welcome dashboard */
+
+html[data-theme="dark"] .dashboard-welcome {
+  background:
+    linear-gradient(
+      135deg,
+      #171e28,
+      #111720
+    );
+
+  border-color: var(--sw-border);
+}
+
+html[data-theme="dark"] .dashboard-welcome__title {
+  color: var(--sw-text);
+}
+
+html[data-theme="dark"] .dashboard-welcome__text {
+  color: var(--sw-text-soft);
+}
+
+html[data-theme="dark"] .dashboard-welcome__badge {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--sw-border);
+}
+
+/* Dashboard cards */
+
+html[data-theme="dark"] .dashboard-card {
+  background: var(--sw-surface);
+  border-color: var(--sw-border);
+  box-shadow: 0 10px 30px var(--sw-shadow);
+}
+
+html[data-theme="dark"] .dashboard-card:not(.dashboard-card--balance)
+  .dashboard-card__icon {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+html[data-theme="dark"] .dashboard-card__value--income {
+  color: #65d49a;
+}
+
+html[data-theme="dark"] .dashboard-card__value--expense {
+  color: #ff8175;
+}
+
+/* Inputs */
+
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea {
+  background: var(--sw-input);
+  color: var(--sw-text);
+  border-color: var(--sw-border);
+}
+
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+  color: #687386;
+}
+
+html[data-theme="dark"] input:focus,
+html[data-theme="dark"] select:focus,
+html[data-theme="dark"] textarea:focus {
+  border-color: rgba(255, 255, 255, 0.28);
+  outline-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Dropdown options */
+
+html[data-theme="dark"] option {
+  background: #151b23;
+  color: #f1f5f9;
+}
+
+/* Labels */
+
+html[data-theme="dark"] label {
+  color: var(--sw-text);
+}
+
+/* Navigation */
+
+html[data-theme="dark"] .view-tabs {
+  background: #111720;
+  border-color: var(--sw-border);
+}
+
+html[data-theme="dark"] .view-tab {
+  color: var(--sw-text-soft);
+}
+
+html[data-theme="dark"] .view-tab:hover {
+  color: var(--sw-text);
+}
+
+html[data-theme="dark"] .view-tab.is-active {
+  color: #ffffff;
+}
+
+/* Section headings */
+
+html[data-theme="dark"] .section-title {
+  color: var(--sw-text);
+}
+
+/* Budget */
+
+html[data-theme="dark"] .budget {
+  background: var(--sw-surface);
+  border-color: var(--sw-border);
+}
+
+html[data-theme="dark"] .budget__note {
+  color: var(--sw-text-soft);
+}
+
+html[data-theme="dark"] .budget__bar {
+  background: #252d38;
+}
+
+/* Entry form */
+
+html[data-theme="dark"] .entry {
+  background: var(--sw-surface);
+  border-color: var(--sw-border);
+}
+
+html[data-theme="dark"] .entry__toggle {
+  background: #10161e;
+}
+
+html[data-theme="dark"] .entry__toggle-btn {
+  color: var(--sw-text-soft);
+}
+
+html[data-theme="dark"] .entry__toggle-btn.is-active {
+  background: #252d38;
+  color: #ffffff;
+}
+
+/* Ledger */
+
+html[data-theme="dark"] .ledger {
+  background: var(--sw-surface);
+  border-color: var(--sw-border);
+}
+
+html[data-theme="dark"] .ledger__table {
+  color: var(--sw-text);
+}
+
+html[data-theme="dark"] .ledger__table th {
+  color: #aab4c2;
+  border-color: var(--sw-border);
+}
+
+html[data-theme="dark"] .ledger__table td {
+  border-color: var(--sw-border);
+}
+
+html[data-theme="dark"] .ledger__table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+html[data-theme="dark"] .ledger__empty {
+  color: var(--sw-text-soft);
+}
+
+/* Breakdown */
+
+html[data-theme="dark"] .breakdown {
+  background: var(--sw-surface);
+  border-color: var(--sw-border);
+}
+
+html[data-theme="dark"] .breakdown__list {
+  color: var(--sw-text);
+}
+
+html[data-theme="dark"] .breakdown__chart-empty {
+  color: var(--sw-text-soft);
+}
+
+/* Buttons */
+
+html[data-theme="dark"] .ghost-btn {
+  color: var(--sw-text);
+  border-color: var(--sw-border);
+  background: transparent;
+}
+
+html[data-theme="dark"] .ghost-btn:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* Shared ledgers */
+
+html[data-theme="dark"] .group-picker {
+  background: var(--sw-surface);
+  border-color: var(--sw-border);
+}
+
+html[data-theme="dark"] .new-group {
+  background: var(--sw-surface);
+  border-color: var(--sw-border);
+}
+
+html[data-theme="dark"] .group-members {
+  background: var(--sw-surface);
+  border-color: var(--sw-border);
+}
+
+html[data-theme="dark"] .balances {
+  background: var(--sw-surface);
+  border-color: var(--sw-border);
+}
+
+html[data-theme="dark"] .member-chips li {
+  background: #202833;
+  color: var(--sw-text);
+}
+
+/* AI Coach */
+
+html[data-theme="dark"] .coach-hero,
+html[data-theme="dark"] .coach-card,
+html[data-theme="dark"] .coach-plan,
+html[data-theme="dark"] .ai-chat {
+  background: var(--sw-surface);
+  border-color: var(--sw-border);
+}
+
+html[data-theme="dark"] .coach-title,
+html[data-theme="dark"] .coach-subtitle,
+html[data-theme="dark"] .coach-card h3,
+html[data-theme="dark"] .ai-chat__head .section-title {
+  color: var(--sw-text);
+}
+
+html[data-theme="dark"] .coach-subtitle,
+html[data-theme="dark"] .ai-chat__sub {
+  color: var(--sw-text-soft);
+}
+
+html[data-theme="dark"] .ai-suggestions button {
+  background: #1c242e;
+  color: var(--sw-text);
+  border-color: var(--sw-border);
+}
+
+html[data-theme="dark"] .ai-suggestions button:hover {
+  background: #252e3a;
+}
+
+html[data-theme="dark"] .ai-message {
+  background: #1a222c;
+  border-color: var(--sw-border);
+  color: var(--sw-text);
+}
+
+html[data-theme="dark"] .ai-message--assistant {
+  background: #151c25;
+}
+
+/* Footer */
+
+html[data-theme="dark"] .pf-footer {
+  color: #7d8998;
+}
+
+/* Theme toggle */
+
+html[data-theme="dark"] .theme-toggle {
+  background: #1b232d;
+  color: #f1f5f9;
+  border-color: var(--sw-border);
+}
+
+html[data-theme="dark"] .theme-toggle:hover {
+  background: #252e39;
+}
