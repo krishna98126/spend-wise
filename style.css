@@ -2574,3 +2574,171 @@ html[data-theme="dark"] .view-tab.is-active .view-tab__icon {
   }
 
 }
+/* =========================================================
+   MOBILE HEADER
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .cover {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 20px;
+  }
+
+  .cover__content {
+    width: 100%;
+  }
+
+  .cover__actions {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+  }
+
+  .theme-toggle,
+  .cover__month-field {
+    width: 100%;
+  }
+
+}
+
+@media (max-width: 430px) {
+
+  .cover__actions {
+    grid-template-columns: 1fr;
+  }
+
+}/* =========================================================
+   MOBILE FORMS
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  .entry__grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .field--wide {
+    grid-column: auto !important;
+  }
+
+  .entry__form {
+    width: 100%;
+  }
+
+  .entry__submit {
+    width: 100%;
+  }
+
+  .budget__row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .budget__input-wrap {
+    width: 100%;
+  }
+
+}/* =========================================================
+   MOBILE LEDGER
+   ========================================================= */
+
+.ledger__table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ledger__table {
+  min-width: 720px;
+}
+
+@media (max-width: 700px) {
+
+  .ledger__head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+
+  .ledger__filter {
+    width: 100%;
+  }
+
+  .ledger__filter select {
+    width: 100%;
+  }
+
+}/* =========================================================
+   AI COACH MOBILE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+  .coach-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .coach-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .coach-score {
+    align-self: flex-start;
+  }
+
+  .coach-plan__head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .coach-plan__head .ghost-btn {
+    width: 100%;
+  }
+
+  .ai-chat__head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+}
+
+@media (max-width: 560px) {
+
+  .ai-chat__form {
+    flex-direction: column;
+  }
+
+  .ai-chat__form button {
+    width: 100%;
+  }
+
+}@media (max-width: 560px) {
+
+  .dashboard-card {
+    width: 100%;
+  }
+
+  .dashboard-card__footer {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .dashboard-welcome__title {
+    font-size: 1.65rem;
+  }
+
+  .dashboard-welcome__text {
+    font-size: 0.88rem;
+  }
+
+}
