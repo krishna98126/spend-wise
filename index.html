@@ -34,13 +34,52 @@
       </div>
     </header>
 
-    <!-- View switcher -->
-    <nav class="view-tabs" aria-label="View">
-      <button type="button" class="view-tab is-active" data-view="personal" role="tab" aria-selected="true">My Passbook</button>
-      <button type="button" class="view-tab" data-view="groups" role="tab" aria-selected="false">Shared Ledgers</button>
-      <button type="button" class="view-tab" data-view="coach" role="tab" aria-selected="false">AI Money Coach</button>
-    </nav>
+    <!-- Main navigation -->
+<nav class="view-tabs" aria-label="Main navigation" role="tablist">
 
+  <button
+    type="button"
+    class="view-tab is-active"
+    data-view="personal"
+    role="tab"
+    aria-selected="true"
+    aria-controls="personal-view">
+    <span class="view-tab__icon" aria-hidden="true">₹</span>
+    <span class="view-tab__content">
+      <strong>My Passbook</strong>
+      <small>Personal spending</small>
+    </span>
+  </button>
+
+  <button
+    type="button"
+    class="view-tab"
+    data-view="groups"
+    role="tab"
+    aria-selected="false"
+    aria-controls="groups-view">
+    <span class="view-tab__icon" aria-hidden="true">⇄</span>
+    <span class="view-tab__content">
+      <strong>Shared Ledgers</strong>
+      <small>Split expenses</small>
+    </span>
+  </button>
+
+  <button
+    type="button"
+    class="view-tab"
+    data-view="coach"
+    role="tab"
+    aria-selected="false"
+    aria-controls="coach-view">
+    <span class="view-tab__icon" aria-hidden="true">✦</span>
+    <span class="view-tab__content">
+      <strong>AI Money Coach</strong>
+      <small>Smart insights</small>
+    </span>
+  </button>
+
+</nav>
     <!-- Page: personal tracker -->
     <main class="page" id="personal-view">
       <!-- Dashboard summary -->
